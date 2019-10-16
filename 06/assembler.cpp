@@ -1,3 +1,5 @@
+// usage: assembler filename_of_the_asm_file_to_be_converted
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -45,7 +47,7 @@ public:
 
 int main(int argc, char const *argv[])
 {
-	std::string name = "deneme";//argv[1];
+	std::string name = argv[1];
 	std::ifstream read;
 	read.open((name+".asm").c_str());
 	Parser po(read);
