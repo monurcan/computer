@@ -60,8 +60,6 @@ int main(int argc, char const *argv[])
 		}
 	}
 
-	//std::cout << (symboltable.find("INFINITE_LOOPs") != symboltable.end());
-	
 	std::ofstream write;
 	write.open((name+".hack").c_str());
 
