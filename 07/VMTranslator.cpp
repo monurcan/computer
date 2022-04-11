@@ -22,7 +22,16 @@ public:
     bool advance(){
         while(std::getline(read, line)){
 			line = line.substr(0, line.find("//"));
-		    if(line.find_first_not_of(' ') != std::string::npos) return true;
+            if(!line.empty() && *line.rbegin() == '\r') {
+                line.erase( line.length()-1, 1);
+            }
+		    if(line.find_first_not_of(' ') != std::string::npos){
+                std::cout << line << "\n";
+                for (int i=0; i<line.length(); i++)
+                    std::cout << (int)line[i];
+                std::cout << "\n\n\n";
+                return true;
+            }
 		}
 		return false;
     }
