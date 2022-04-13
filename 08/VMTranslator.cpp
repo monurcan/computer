@@ -379,7 +379,7 @@ int main(int argc, char const *argv[])
     }else {
         for (auto& p : std::experimental::filesystem::recursive_directory_iterator(std::string(argv[1])))
         if (p.path().extension() == ".vm")
-            listOfFiles.push_back(std::string(p.path().relative_path()));        
+            listOfFiles.push_back(std::string(p.path()));        
     }
 
     Parser* po = NULL;
@@ -388,6 +388,7 @@ int main(int argc, char const *argv[])
     for(auto &p : listOfFiles){
     po = new Parser(p);
     co.setFileName(p);
+    
     while(po->advance()){
         switch (po->commandType())
         {
