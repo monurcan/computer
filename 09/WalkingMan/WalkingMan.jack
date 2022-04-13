@@ -1,0 +1,42 @@
+class WalkingMan {
+   field Man man;
+
+   constructor WalkingMan new(){
+        let man = Man.new(10, 203);
+        do Screen.drawLine(0, 220, 510, 220);
+        do Screen.drawRectangle(500, 205, 506, 211);
+        do Screen.drawLine(506, 211, 506, 220);
+        do Output.moveCursor(10, 10);
+        do Output.printString("Go to the flag!");
+        return this;
+   }
+
+   method void run(){
+        var char key;  // the key currently pressed by the user
+        var boolean exit;
+        let exit = false;
+
+        while (~exit) {
+            while (key = 0) {
+                let key = Keyboard.keyPressed();
+            }
+            if (key = 81)  { let exit = true; }     // q key
+            if (key = 131) { do man.changeState(3); }
+            if (key = 130) { do man.changeState(1); } 
+            if (key = 132) { do man.changeState(2); }
+
+            while (~(key = 0)) {
+                let key = Keyboard.keyPressed();
+                if (key = 0) {do man.changeState(0);}
+                do man.move();
+            }
+        }
+        return;
+   }
+
+   method void dispose() {
+      do man.dispose();
+      do Memory.deAlloc(this);
+      return;
+   }
+}

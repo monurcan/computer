@@ -1,0 +1,170 @@
+class Man {
+    field integer x, y, state; // states: idle, walk right, walk left, jump
+    
+    constructor Man new(int Ax, int Ay){
+        let x = Ax;
+        let y = Ay;
+        let state = 0;
+        do draw();
+        return this;
+    }
+
+    method void changeState(int state_new){
+        let state = state_new;
+        return;
+    }
+
+    method void move(){
+        do erase();
+        if ((state = 2) & ((x + 18) < 510)) {
+            let x = x + 5;
+        }
+
+        if ((x + 18) > 509) {
+            do Output.moveCursor(14, 12);
+            do Output.printString("You won!");
+        }
+
+        if ((state = 1) & (x > 1)) {
+            let x = x - 5;
+        }
+        if ((state = 3) & ((x + 48) < 510)) {
+            do erase();
+            let y = y - 12;
+            do draw();
+            do Sys.wait(75);
+            do erase();
+            let y = y - 8;
+            do draw();
+            do Sys.wait(75);
+            do erase();
+            let y = y - 4;
+            do draw();
+            do Sys.wait(75);
+            do erase();
+            let y = y + 2;
+            do draw();
+            do Sys.wait(75);
+            do erase();
+            let y = y + 6;
+            do draw();
+            do Sys.wait(115);
+            do erase();
+            let y = y + 16;
+        }
+        do draw();
+        do Sys.wait(25);
+        return;
+    }
+
+    method void draw() {
+        var int memAddress;
+        let memAddress = 16384+(32*y)+(x/16);
+
+        if (state=0) {
+            do Memory.poke(memAddress+0, 4064);
+            do Memory.poke(memAddress+32, 4064);
+            do Memory.poke(memAddress+64, 2080);
+            do Memory.poke(memAddress+96, 2720);
+            do Memory.poke(memAddress+128, 2080);
+            do Memory.poke(memAddress+160, 2976);
+            do Memory.poke(memAddress+192, 2080);
+            do Memory.poke(memAddress+224, 1984);
+            do Memory.poke(memAddress+256, 8176);
+            do Memory.poke(memAddress+288, 8176);
+            do Memory.poke(memAddress+320, 8176);
+            do Memory.poke(memAddress+352, 4064);
+            do Memory.poke(memAddress+384, 4064);
+            do Memory.poke(memAddress+416, 1088);
+            do Memory.poke(memAddress+448, 1088);
+            do Memory.poke(memAddress+480, 3264);
+        }
+
+        if (state=1){
+            do Memory.poke(memAddress+0, 2016);
+            do Memory.poke(memAddress+32, 2016);
+            do Memory.poke(memAddress+64, 1248);
+            do Memory.poke(memAddress+96, 1760);
+            do Memory.poke(memAddress+128, 1248);
+            do Memory.poke(memAddress+160, 1760);
+            do Memory.poke(memAddress+192, 1248);
+            do Memory.poke(memAddress+224, 1984);
+            do Memory.poke(memAddress+256, 4064);
+            do Memory.poke(memAddress+288, 4064);
+            do Memory.poke(memAddress+320, 4064);
+            do Memory.poke(memAddress+352, 4064);
+            do Memory.poke(memAddress+384, 4064);
+            do Memory.poke(memAddress+416, 1088);
+            do Memory.poke(memAddress+448, 1088);
+            do Memory.poke(memAddress+480, 3264);
+        }
+            
+        if (state=2){
+            do Memory.poke(memAddress+0, 2016);
+            do Memory.poke(memAddress+32, 2016);
+            do Memory.poke(memAddress+64, 1824);
+            do Memory.poke(memAddress+96, 1888);
+            do Memory.poke(memAddress+128, 1824);
+            do Memory.poke(memAddress+160, 1888);
+            do Memory.poke(memAddress+192, 1824);
+            do Memory.poke(memAddress+224, 992);
+            do Memory.poke(memAddress+256, 2032);
+            do Memory.poke(memAddress+288, 2032);
+            do Memory.poke(memAddress+320, 2032);
+            do Memory.poke(memAddress+352, 2032);
+            do Memory.poke(memAddress+384, 2032);
+            do Memory.poke(memAddress+416, 544);
+            do Memory.poke(memAddress+448, 544);
+            do Memory.poke(memAddress+480, 816);
+        } 
+        
+        if (state=3) {
+            do Memory.poke(memAddress+0, 2032);
+            do Memory.poke(memAddress+32, 1040);
+            do Memory.poke(memAddress+64, 1360);
+            do Memory.poke(memAddress+96, 1040);
+            do Memory.poke(memAddress+128, 1488);
+            do Memory.poke(memAddress+160, 1040);
+            do Memory.poke(memAddress+192, 5682);
+            do Memory.poke(memAddress+224, 5092);
+            do Memory.poke(memAddress+256, 4088);
+            do Memory.poke(memAddress+288, 2032);
+            do Memory.poke(memAddress+320, 2032);
+            do Memory.poke(memAddress+352, 2032);
+            do Memory.poke(memAddress+384, 2032);
+            do Memory.poke(memAddress+416, 544);
+            do Memory.poke(memAddress+448, 3096);
+            do Memory.poke(memAddress+480, 0);
+        }
+        
+        return;
+    }
+
+    method void erase() {
+        var int memAddress;
+        let memAddress = 16384+(32*y)+(x/16);
+
+        do Memory.poke(memAddress+0, 0);
+        do Memory.poke(memAddress+32, 0);
+        do Memory.poke(memAddress+64, 0);
+        do Memory.poke(memAddress+96, 0);
+        do Memory.poke(memAddress+128, 0);
+        do Memory.poke(memAddress+160, 0);
+        do Memory.poke(memAddress+192, 0);
+        do Memory.poke(memAddress+224, 0);
+        do Memory.poke(memAddress+256, 0);
+        do Memory.poke(memAddress+288, 0);
+        do Memory.poke(memAddress+320, 0);
+        do Memory.poke(memAddress+352, 0);
+        do Memory.poke(memAddress+384, 0);
+        do Memory.poke(memAddress+416, 0);
+        do Memory.poke(memAddress+448, 0);
+        do Memory.poke(memAddress+480, 0);
+        return;
+    }
+
+    method void dispose() {
+      do Memory.deAlloc(this);
+      return;
+   }
+}
