@@ -768,6 +768,33 @@ pop this 6
 call Output.backSpace 0
 pop temp 0
 push this 6
+push constant 10
+gt
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+call Output.backSpace 0
+pop temp 0
+label IF_FALSE2
+push this 6
+push constant 100
+gt
+if-goto IF_TRUE3
+goto IF_FALSE3
+label IF_TRUE3
+call Output.backSpace 0
+pop temp 0
+label IF_FALSE3
+push this 6
+push constant 1000
+gt
+if-goto IF_TRUE4
+goto IF_FALSE4
+label IF_TRUE4
+call Output.backSpace 0
+pop temp 0
+label IF_FALSE4
+push this 6
 call Output.printInt 1
 pop temp 0
 label IF_END1

@@ -166,6 +166,15 @@ class SnakeGame {
             do drawBait(baitx, baity);
             let baitCount = baitCount +1;
             do Output.backSpace();
+            if(baitCount > 10){
+                do Output.backSpace();
+            }
+            if(baitCount > 100){
+                do Output.backSpace();
+            }
+            if(baitCount > 1000){
+                do Output.backSpace();
+            }
             do Output.printInt(baitCount);
         }
 
