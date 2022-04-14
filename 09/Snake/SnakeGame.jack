@@ -1,0 +1,218 @@
+class SnakeGame {
+   field Queue snakeQueue;
+   field int direction; // 0 top 1 right 2 bottom 3 left
+   field int baitx, baity;
+   field int baitseedx, baitseedy;
+   field int baitCount;
+   field boolean exit;
+   field char key;
+
+   constructor SnakeGame new() {
+    var int memAddress;
+      let snakeQueue = Queue.new(150);
+      do snakeQueue.add(10, 12);
+      do snakeQueue.add(10, 11);
+      do snakeQueue.add(10, 10);
+      do snakeQueue.add(10, 9);
+      let direction = 1;
+      do allowedMove(1);
+
+      do Screen.drawLine(30, 30, 30, 221);
+      do Screen.drawLine(30, 30, 477, 30);
+      do Screen.drawLine(477, 30, 477, 221);
+      do Screen.drawLine(30, 221, 477, 221);
+      do drawBody(10, 12);
+      do drawBody(10, 11);
+      do drawBody(10, 10);
+      do drawBody(10, 9);
+      let baitx = 21;
+      let baity = 13;
+      do drawBait(baitx, baity);
+      let baitseedx = 1231;
+      let baitseedy = 1531;
+      let baitCount = 0;
+
+      do Output.moveCursor(1, 27);
+      do Output.printString("Snake Game");
+      do Output.moveCursor(21, 27);
+      do Output.printString("Onurcan Kaya");
+      do Output.moveCursor(0,0);
+
+      do Output.printString("Score: ");
+      do Output.printInt(baitCount);
+
+        do drawSnakeLogo(16384+(32*5)+12);
+        do drawSnakeLogo(16384+(32*5)+19);
+
+      return this;
+   }
+
+    method void drawSnakeLogo(int memAddress) {
+        do Memory.poke(memAddress+0, 64);
+        do Memory.poke(memAddress+32, 224);
+        do Memory.poke(memAddress+64, 960);
+        do Memory.poke(memAddress+96, 1024);
+        do Memory.poke(memAddress+128, 1016);
+        do Memory.poke(memAddress+160, 4);
+        do Memory.poke(memAddress+192, 2);
+        do Memory.poke(memAddress+224, 4092);
+        do Memory.poke(memAddress+256, 4096);
+        do Memory.poke(memAddress+288, 4088);
+        do Memory.poke(memAddress+320, 4);
+        do Memory.poke(memAddress+352, 56);
+        do Memory.poke(memAddress+384, 960);
+        do Memory.poke(memAddress+416, 1024);
+        do Memory.poke(memAddress+448, 992);
+        do Memory.poke(memAddress+480, 16);
+        return;
+    }
+
+    // üstünde olursa?
+    method void getRandBait() {
+        let baitseedx = baitx*2 + baitseedx + 31;
+        let baitseedy = baity*10 + baitseedy + 37;
+        let baitx = Queue.mod(baitseedx, 55);
+        let baity = Queue.mod(baitseedy, 23);
+
+        while (snakeQueue.isExist(baitx, baity)){
+            let baitseedx = baitx*2 + baitseedx + 31;
+            let baitseedy = baity*10 + baitseedy + 37;
+            let baitx = Queue.mod(baitseedx, 55);
+            let baity = Queue.mod(baitseedy, 23);    
+        }
+        return;
+    }
+
+    method void drawBody(int x, int y){
+      do Screen.drawRectangle(30+(x*8)+1, 30+(y*8)+1, 30+(x*8)+6, 30+(y*8)+6);
+      return;
+    }
+
+    method void drawBait(int x, int y){
+      do Screen.drawCircle(30+(x*8)+3, 30+(y*8)+3, 2);
+      return;
+    }
+
+   /** Disposes this game. */
+   method void dispose() {
+      do snakeQueue.dispose();
+      do Memory.deAlloc(this);
+      return;
+   }
+
+    method Array getNewTail(int direction_){
+        var Array tailVal;
+       var Array tailVal_old;
+       
+       let tailVal_old = snakeQueue.getTailVal();
+       let tailVal = Array.new(2);
+       let tailVal[0] = tailVal_old[0];
+       let tailVal[1] = tailVal_old[1];
+
+        if (direction_ = 1) {
+            let tailVal[0] = tailVal[0] + 1;
+            
+            if (tailVal[0] = 56){
+                let tailVal[0] = 0;
+            }
+        }
+        if (direction_ = 3) { 
+            let tailVal[0] = tailVal[0] - 1;
+
+            if (tailVal[0] = -1){
+                let tailVal[0] = 55;
+            }
+        }
+        if (direction_ = 2) { 
+            let tailVal[1] = tailVal[1] + 1;
+            
+            if (tailVal[1] = 24){
+                let tailVal[1] = 0;
+            }
+        }
+        if (direction_ = 0) { 
+            let tailVal[1] = tailVal[1] - 1;
+            
+            if (tailVal[1] = -1){
+                let tailVal[1] = 23;
+            }
+        }
+        return tailVal;
+    }
+
+   method void moveSnake() {
+       var Array headVal_old;
+       var Array tailVal;
+       let tailVal = getNewTail(direction);
+
+        if (snakeQueue.isExist(tailVal[0], tailVal[1])){
+            let exit = true;
+            do Output.moveCursor(10,27);
+            do Output.printString("YOU LOST!");
+            return;
+        }
+
+        do snakeQueue.add(tailVal[0], tailVal[1]);
+        do drawBody(tailVal[0], tailVal[1]);
+
+        if(~(tailVal[0] = baitx) | ~(tailVal[1] = baity)){
+            let headVal_old = snakeQueue.getHeadVal();
+            do Screen.setColor(false);
+            do drawBody(headVal_old[0], headVal_old[1]);
+            do Screen.setColor(true);
+            do snakeQueue.erase();
+        }else {
+            do getRandBait();
+            do drawBait(baitx, baity);
+            let baitCount = baitCount +1;
+            do Output.backSpace();
+            do Output.printInt(baitCount);
+        }
+
+      do Sys.wait(135);  // delays the next movement
+      return;
+   }
+
+    method boolean allowedMove(int direction_input){
+        var Array tailVal;
+        var Array tail_1Val;
+
+        let tailVal = getNewTail(direction_input);
+        let tail_1Val = snakeQueue.getTail_1Val();
+
+        if ((tailVal[0] = tail_1Val[0]) & (tailVal[1] = tail_1Val[1])){
+            do Memory.deAlloc(tailVal);
+            return false;    
+        }else {
+            return true;
+        }
+    }
+
+   /** Runs the game: handles the user's inputs and moves the square accordingly */
+   method void run() {
+      let exit = false;
+      
+      while (~exit) {
+         // waits for a key to be pressed
+         while ((key = 0) & ~exit) {
+            let key = Keyboard.keyPressed();
+            do moveSnake();
+         }
+         if (key = 81)  { let exit = true; }     // q key
+         if (key = 131) { if (allowedMove(0)) { let direction = 0; } }   // up arrow
+         if (key = 133) { if (allowedMove(2)) { let direction = 2; } }   // down arrow
+         if (key = 130) { if (allowedMove(3)) { let direction = 3; } }   // left arrow
+         if (key = 132) { if (allowedMove(1)) { let direction = 1; } }   // right arrow
+
+         // waits for the key to be released
+         while (~(key = 0) & ~exit) {
+            let key = Keyboard.keyPressed();
+            do moveSnake();
+         }
+     } // while
+     return;
+   }
+}
+
+
+

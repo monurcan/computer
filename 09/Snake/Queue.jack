@@ -1,0 +1,74 @@
+class Queue {
+    field integer tail, head, size;
+    field Array arr;
+    
+    constructor Queue new(int size_){
+        let tail = -1;
+        let head = 0;
+        let size = size_;
+        let arr = Array.new(size);
+        return this;
+    }
+
+    function int mod(int a, int base){
+        var int res;
+        let res = a;
+        while (~(res < base)){
+            let res = res - base;
+        }
+        return res;
+    }
+
+    method void add(int x, int y){
+        var Array xyArr;
+        let xyArr = Array.new(2);
+        let xyArr[0] = x;
+        let xyArr[1] = y;
+        let tail = Queue.mod(tail + 1, size);
+        let arr[tail] = xyArr;
+        return;
+    }
+
+    method void erase() {
+        var Array arrHead;
+        let arrHead = arr[head];
+        do arrHead.dispose();
+        let head = Queue.mod(head + 1, size);
+        return;
+    }
+
+    method Array getTailVal(){
+        return arr[tail];
+    }
+
+    method Array getTail_1Val(){
+        return arr[tail-1];
+    }
+
+    method Array getHeadVal(){
+        return arr[head];
+    }
+
+    method boolean isExist(int x, int y){
+        var int i;
+        var Array tempArr;
+        let i = head;
+
+        while (~(i=Queue.mod(tail+1, size) )){
+            let tempArr = arr[i];
+
+            if ((tempArr[0]=x) & (tempArr[1]=y)){
+                return true;
+            }
+
+            let i = Queue.mod(i+1, size);
+        }
+
+        return false;
+    }
+
+    method void dispose(){
+        do Memory.deAlloc(this);
+        return;
+    }
+}
